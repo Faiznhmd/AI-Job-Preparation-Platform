@@ -1,26 +1,41 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
+    /* 🔹 BASIC SETUP */
+    "module": "commonjs",
+    "target": "ES2023",
+    "moduleResolution": "node",
+
+    /* 🔹 OUTPUT */
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./",
+
+    /* 🔹 TYPE CHECKING (IMPORTANT 🔥) */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* 🔹 DECORATORS (NestJS REQUIRED) */
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+
+    /* 🔹 INTEROP */
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
+
+    /* 🔹 PERFORMANCE */
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false,
-    
-  }
+    "incremental": true,
+
+    /* 🔹 DEBUGGING */
+    "sourceMap": true,
+    "declaration": true,
+
+    /* 🔹 SAFETY */
+    "forceConsistentCasingInFileNames": true
+  },
+
+  /* 🔥 VERY IMPORTANT (fixes your issue) */
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
