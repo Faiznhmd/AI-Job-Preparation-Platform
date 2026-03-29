@@ -15,9 +15,9 @@ export class InterviewController {
     @Body() dto: GenerateQuestionDto, // ✅ MUST BE HERE
     @Req() req: AuthRequest,
   ) {
-    console.log('🔥 DTO:', dto); // DEBUG
+    console.log('INTERVIEW USER:', req.user);
 
-    const userId = req.user.id;
+    const userId = req.user.id; // ✅ ALWAYS id
 
     return this.interviewService.generateQuestions(dto, userId);
   }

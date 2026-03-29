@@ -24,7 +24,10 @@ export class InterviewService {
     const { role, difficulty = 'medium', count = 5 } = dto;
 
     // 1️⃣ Fetch Resume
-    const resume = await this.resumeModel.findOne({ userId });
+    const resume = await this.resumeModel.findOne({
+      userId: userId, // ✅ STRING MATCH
+    });
+    console.log('FOUND RESUME:', resume);
 
     if (!resume) {
       throw new NotFoundException(

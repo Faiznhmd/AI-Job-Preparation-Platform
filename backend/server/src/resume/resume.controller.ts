@@ -20,6 +20,7 @@ export class ResumeController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File, @Req() req: AuthRequest) {
+    console.log('UPLOAD USER:', req.user);
     const userId = req.user.id; // 🔥 GET REAL USER
 
     return this.resumeService.handleResume(file, userId);

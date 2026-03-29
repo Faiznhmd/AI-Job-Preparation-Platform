@@ -36,7 +36,7 @@ export class ResumeService {
 
     // 🔥 SAVE TO DB (VERY IMPORTANT)
     const savedResume = await this.resumeModel.create({
-      userId,
+      userId: userId,
       fileName: file.originalname,
       fileUrl: file.originalname, // or path if storing
       extractedText: text,

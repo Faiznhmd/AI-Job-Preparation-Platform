@@ -8,7 +8,6 @@ export const analyzeWithAI = async (text: string) => {
         role: 'system',
         content: `
 You are an expert resume analyzer.
-
 Return ONLY JSON:
 {
   "role": "",
