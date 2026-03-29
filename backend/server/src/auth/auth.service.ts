@@ -53,13 +53,13 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({
-      userId: user._id,
+      id: user._id,
       email: user.email,
     });
 
     return {
       message: 'Login successful',
-      token,
+      access_token: token,
     };
   }
 }

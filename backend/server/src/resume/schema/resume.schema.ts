@@ -22,6 +22,13 @@ export class Resume {
 
   @Prop([String])
   suggestions!: string[];
+
+  @Prop({ required: true })
+  fileUrl!: string;
+
+  // ✅ ADD THIS
+  @Prop({ required: true })
+  text!: string;
 }
 
 export const ResumeSchema = SchemaFactory.createForClass(Resume);
