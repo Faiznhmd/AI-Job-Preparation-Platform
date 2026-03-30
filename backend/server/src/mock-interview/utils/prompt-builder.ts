@@ -16,9 +16,8 @@ Experience Level: ${level}
 Skills: ${techStack?.join(', ')}
 
 Instructions:
-- Identify the domain of the role automatically
 - Ask ONLY role-relevant questions
-- Start from basics → go advanced
+- Start from basics → advanced
 - Ask follow-up questions
 - Do NOT repeat questions
 

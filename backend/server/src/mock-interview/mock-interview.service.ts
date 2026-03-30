@@ -103,4 +103,93 @@ export class MockInterviewService {
 
     return parsed;
   }
+
+  async evaluate(interviewId: string) {
+    const interview = await this.model.findById(interviewId);
+
+    if (!interview) {
+      throw new NotFoundException('Interview not found');
+    }
+
+    // ✅ Convert messages → Q/A
+    let formatted = '';
+
+    for (let i = 0; i < interview.messages.length; i++) {
+      const msg = interview.messages[i];
+
+      if (msg.role === 'ai') {
+        formatted += `Question: ${msg.content}\n`;
+      } else {
+        formatted += `Answer: ${msg.content}\n\n`;
+      }
+    }
+
+    // 🤖 AI FINAL EVALUATION
+    const aiRes = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages: [
+        {
+          role: 'system',
+          content: `
+You are a senior technical interviewer.
+
+Evaluate the candidate.
+
+Return ONLY JSON:
+
+{
+  "communication": number (0-10),
+  "technical": number (0-10),
+  "confidence": number (0-10),
+  "overall": number (0-10),
+  "summary": "short paragraph",
+  "suggestions": ["point1", "point2"]
+}
+
+Rules:
+- Communication → clarity, grammar
+- Technical → correctness
+- Confidence → depth
+- Overall → average
+
+STRICT: Only JSON
+`,
+        },
+        {
+          role: 'user',
+          content: `
+Role: ${interview.role}
+Level: ${interview.level}
+Tech Stack: ${interview.techStack.join(', ')}
+
+Interview:
+${formatted}
+`,
+        },
+      ],
+    });
+
+    const content = aiRes.choices?.[0]?.message?.content || '';
+
+    let parsed;
+
+    try {
+      parsed = JSON.parse(content);
+    } catch {
+      parsed = {
+        communication: 5,
+        technical: 5,
+        confidence: 5,
+        overall: 5,
+        summary: 'Average performance',
+        suggestions: ['Practice more'],
+      };
+    }
+
+    // ✅ Save result
+    interview.finalFeedback = parsed;
+    await interview.save();
+
+    return parsed;
+  }
 }

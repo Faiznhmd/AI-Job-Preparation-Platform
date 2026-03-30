@@ -9,7 +9,7 @@ export class MockInterview {
   userId!: string;
 
   @Prop({ required: true })
-  role!: string; // 🔥 dynamic
+  role!: string;
 
   @Prop({ required: true })
   level!: string;
@@ -30,6 +30,27 @@ export class MockInterview {
     role: 'ai' | 'user';
     content: string;
   }[];
+
+  // ✅ NEW: FINAL FEEDBACK
+  @Prop({
+    type: {
+      communication: Number,
+      technical: Number,
+      confidence: Number,
+      overall: Number,
+      summary: String,
+      suggestions: [String],
+    },
+    default: null,
+  })
+  finalFeedback!: {
+    communication: number;
+    technical: number;
+    confidence: number;
+    overall: number;
+    summary: string;
+    suggestions: string[];
+  };
 }
 
 export const MockInterviewSchema = SchemaFactory.createForClass(MockInterview);

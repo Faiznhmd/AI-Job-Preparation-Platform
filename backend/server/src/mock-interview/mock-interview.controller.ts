@@ -27,4 +27,15 @@ export class MockInterviewController {
   answer(@Body() dto: AnswerDto) {
     return this.service.answer(dto);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('evaluate')
+  evaluate(@Body() body: { interviewId: string }) {
+    console.log('BODY:', body);
+    if (!body || !body.interviewId) {
+      throw new Error('interviewId is required');
+    }
+
+    return this.service.evaluate(body.interviewId);
+  }
 }
