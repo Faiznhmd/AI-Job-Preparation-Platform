@@ -1,58 +1,75 @@
-import { useDispatch } from 'react-redux';
-import { setCredentials, setLoading } from '../redux/slices/authSlice';
-import { loginUser } from '../services/authApi';
+'use client';
+
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
-const Login = () => {
+import { loginSuccess } from '../../store/slices/authSlice';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      dispatch(setLoading(true));
+      const res = await fetch('http://localhost:4000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-      const res = await loginUser(form);
+      const data = await res.json();
+      console.log(data, 'data');
 
-      dispatch(
-        setCredentials({
-          user: res.data.user,
-          token: res.data.token,
-        }),
-      );
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
 
-      localStorage.setItem('token', res.data.token);
-
-      dispatch(setLoading(false));
-
-      // redirect to dashboard
-      window.location.href = '/dashboard';
-    } catch (error) {
-      dispatch(setLoading(false));
-      console.log(error);
+      dispatch(loginSuccess(data));
+      localStorage.setItem('token', data.token);
+      router.push('/dashboard');
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
-    <div>
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white">
+      <div className="bg-gray-900/80 backdrop-blur-lg p-8 rounded-2xl w-96 shadow-xl border border-gray-700">
+        <h2 className="text-3xl font-bold mb-6 text-center">Welcome Back 👋</h2>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-3 mb-4 bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <button onClick={handleLogin}>Login</button>
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-3 mb-4 bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-600 hover:bg-blue-700 transition py-3 rounded-lg font-semibold"
+        >
+          Login
+        </button>
+
+        <p className="text-sm text-gray-400 mt-4 text-center">
+          Don’t have an account?{' '}
+          <Link className="text-blue-400 cursor-pointer" href="/register">
+            Signup
+          </Link>
+        </p>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}

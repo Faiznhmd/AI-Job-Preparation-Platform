@@ -2,86 +2,83 @@
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../store/slices/authSlice';
+
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
-
   const handleRegister = async () => {
     try {
-      dispatch(setLoading(true));
+      const res = await fetch('http://localhost:4000/auth/register', {
+        // ✅ FIXED
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      const res = await registerUser(form);
+      const data = await res.json();
 
-      dispatch(
-        setCredentials({
-          user: res.data.user,
-          token: res.data.token,
-        }),
-      );
+      if (!res.ok) {
+        alert(data.message || 'Registration failed');
+        return;
+      }
 
-      localStorage.setItem('token', res.data.token);
-
-      dispatch(setLoading(false));
+      dispatch(loginSuccess(data));
+      localStorage.setItem('token', data.token);
 
       router.push('/dashboard');
-    } catch (error) {
-      dispatch(setLoading(false));
-      console.log(error);
+    } catch (err) {
+      console.error('REGISTER ERROR:', err);
+      alert('Something went wrong');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-2xl shadow-sm w-full max-w-md">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
-          Create Account
-        </h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white">
+      <div className="bg-gray-900/80 backdrop-blur-lg p-8 rounded-2xl w-96 shadow-xl border border-gray-700">
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          Create Account 🚀
+        </h2>
 
-        {/* Name */}
         <input
           type="text"
-          placeholder="Full Name"
-          className="w-full mb-4 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          placeholder="Name"
+          className="w-full p-3 mb-4 bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setName(e.target.value)}
         />
 
-        {/* Email */}
         <input
           type="email"
           placeholder="Email"
-          className="w-full mb-4 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="w-full p-3 mb-4 bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setEmail(e.target.value)}
         />
 
-        {/* Password */}
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-6 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="w-full p-3 mb-4 bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setPassword(e.target.value)}
         />
 
-        {/* Button */}
         <button
           onClick={handleRegister}
-          className="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 transition py-3 rounded-lg font-semibold mb-4"
         >
           Register
         </button>
 
-        {/* Login Redirect */}
-        <p className="text-sm text-gray-500 mt-4 text-center">
+        <p className="text-sm text-gray-400 text-center">
           Already have an account?{' '}
           <span
-            className="text-gray-900 cursor-pointer"
+            className="text-blue-400 cursor-pointer"
             onClick={() => router.push('/login')}
           >
             Login
