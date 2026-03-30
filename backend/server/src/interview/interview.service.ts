@@ -27,7 +27,7 @@ export class InterviewService {
     const resume = await this.resumeModel.findOne({
       userId: userId, // ✅ STRING MATCH
     });
-    console.log('FOUND RESUME:', resume);
+    // console.log('FOUND RESUME:', resume);
 
     if (!resume) {
       throw new NotFoundException(

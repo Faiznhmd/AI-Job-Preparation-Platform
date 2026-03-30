@@ -8,6 +8,7 @@ import { ResumeModule } from './resume/resume.module';
 import { InterviewModule } from './interview/interview.module';
 import { AiModule } from './resume/ai/ai.module';
 import { JwtStrategy } from './common/guards/jwt.strategy';
+import { MockInterviewModule } from './mock-interview/mock-interview.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JwtStrategy } from './common/guards/jwt.strategy';
     ResumeModule,
     InterviewModule,
     AiModule,
+    MockInterviewModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
