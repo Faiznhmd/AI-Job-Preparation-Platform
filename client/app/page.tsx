@@ -13,7 +13,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-black text-white ">
       <Navbar />
       <Hero />
       <Problem />
@@ -46,47 +46,86 @@ function Navbar() {
 // ================= HERO =================
 function Hero() {
   return (
-    <motion.div
+    <motion.section
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className="text-center py-20 px-6"
+      className="flex flex-col items-center justify-center text-center px-6 pt-24 pb-12"
     >
-      <h1 className="text-5xl font-bold mb-6">
+      <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
         Crack Your Dream Job with <span className="text-blue-500">AI</span>
       </h1>
+
       <p className="text-gray-400 max-w-2xl mx-auto mb-8">
         Analyze your resume, practice mock interviews, and get personalized
         roadmaps.
       </p>
-      <div className="space-x-4">
+
+      <div className="flex gap-4 justify-center">
         <Link href="/login" className="bg-blue-500 px-6 py-3 rounded-lg">
           Get Started
         </Link>
+
         <button className="border border-gray-600 px-6 py-3 rounded-lg">
           Watch Demo
         </button>
       </div>
-    </motion.div>
+    </motion.section>
   );
 }
 
 // ================= PROBLEM =================
 function Problem() {
+  const problems = [
+    {
+      title: 'No Resume Feedback',
+      desc: "You submit resumes blindly without knowing what's wrong.",
+      icon: '📄',
+    },
+    {
+      title: 'No Real Practice',
+      desc: 'You never experience real interview pressure before the actual one.',
+      icon: '🎤',
+    },
+    {
+      title: 'No Clear Roadmap',
+      desc: 'You feel lost and don’t know what to study next.',
+      icon: '🧭',
+    },
+  ];
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="py-16 px-8 text-center"
-    >
-      <h2 className="text-3xl font-bold mb-8">Why Students Struggle?</h2>
-      <div className="grid md:grid-cols-3 gap-6 text-gray-400">
-        <div>❌ No feedback on resume</div>
-        <div>❌ No real interview practice</div>
-        <div>❌ Confused what to study</div>
+    <section className="py-20 px-8 text-center">
+      <h2 className="text-4xl font-bold mb-4">
+        Why Students <span className="text-red-500">Struggle?</span>
+      </h2>
+
+      <p className="text-gray-400 mb-12 max-w-2xl mx-auto">
+        Most students fail not because they lack talent, but because they lack
+        guidance, feedback, and real practice.
+      </p>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        {problems.map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.2 }}
+            whileHover={{ scale: 1.05 }}
+            className="bg-gray-900 border border-gray-800 p-6 rounded-xl shadow-lg"
+          >
+            <div className="text-4xl mb-4">{item.icon}</div>
+
+            <h3 className="text-xl font-semibold mb-2 text-white">
+              {item.title}
+            </h3>
+
+            <p className="text-gray-400 text-sm">{item.desc}</p>
+          </motion.div>
+        ))}
       </div>
-    </motion.div>
+    </section>
   );
 }
 

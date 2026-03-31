@@ -30,7 +30,8 @@ export default function LoginPage() {
       }
 
       dispatch(loginSuccess(data));
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.access_token);
+      console.log('TOKEN SAVED:', localStorage.getItem('token')); // deb
       router.push('/dashboard');
     } catch (err) {
       console.error(err);

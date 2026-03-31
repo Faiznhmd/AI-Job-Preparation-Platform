@@ -5,8 +5,17 @@ const API = axios.create({
 });
 
 // LOGIN API
-export const loginUser = async (data) => {
-  return await API.post('/auth/login', data);
+export const loginUser = async (data: { email: string; password: string }) => {
+  const res = await API.post('/auth/login', data);
+
+  console.log("LOGIN RESPONSE:", res.data); // 👈 check this once
+
+  // ✅ IMPORTANT: store correct field
+  const token = res.data.access_token; // 👈 MUST match backend
+
+  localStorage.setItem("token", token);
+
+  return res.data;
 };
 
 // REGISTER API
