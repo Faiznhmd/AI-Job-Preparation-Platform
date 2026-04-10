@@ -74,6 +74,10 @@ export class MockInterviewService {
           role: 'system',
           content: prompt,
         },
+        ...interview.messages.map((msg) => ({
+          role: msg.role === 'ai' ? 'assistant' : 'user',
+          content: msg.content,
+        })),
       ],
     });
 
